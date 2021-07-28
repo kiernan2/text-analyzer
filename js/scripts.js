@@ -7,12 +7,12 @@ function noInputtedWord(word, text) {
 // Business Logic
 
 function wordCounter(text) {
-  if (text.trim().length === 0) {
+  const censoredText = bannedWords(text);
+  if (censoredText.toString().trim().length === 0) {
     return 0;
   }
   let wordCount = 0;
-  const wordArray = text.trim().split(" ");
-  wordArray.forEach(function(element) {
+  censoredText.split(" ").forEach(function(element) {
     if (!Number(element)) {
       wordCount++;
     }
@@ -20,11 +20,26 @@ function wordCounter(text) {
   return wordCount;
 }
 
+function bannedWords(text) {
+  const banned = ["zoinks","muppeteer","biffaroni","loopdaloop"];
+  let wordArray = text.split(" ");
+  wordArray.forEach(function(element) {
+    banned.forEach(function(ban) {
+      if (element === ban) {
+        wordArray.splice(element, 1)
+      }
+    });
+  });
+  let fillterdArr = wordArray.filter(word => word !== "")
+  return fillterdArr.join(" ");
+}
+
 function numberOfOccurrencesInText(word, text) {
-  if (noInputtedWord(word, text)) {
+  const censoredText = bannedWords(text);
+  if (noInputtedWord(word, censoredText)) {
     return 0;
   }
-  const wordArray = text.split(" ");
+  const wordArray = censoredText.split(" ");
   let wordCount = 0;
   wordArray.forEach(function(element) {
     if (element.toLowerCase().includes(word.toLowerCase())) {
@@ -35,13 +50,15 @@ function numberOfOccurrencesInText(word, text) {
 }
 
 function boldPassage(word, text) {
-  if (noInputtedWord(word, text)) {
+  const censoredText = bannedWords(text);
+  if (noInputtedWord(word, censoredText)) {
     return "";
   }
   let htmlString = "<p>";
-  let textArray = text.split(" ");
+  let textArray = censoredText.split(" ");
   textArray.forEach(function(element, index) {
-    if (word === element) {
+    console.log(word.split(""))
+    if (element.toLowerCase().includes(word.toLowerCase())) {
       htmlString = htmlString.concat("<b>" + element + "</b>");
     } else {
       htmlString = htmlString.concat(element);
@@ -53,14 +70,30 @@ function boldPassage(word, text) {
   return htmlString + "</p>"
 }
 
+function uniqueWords(userString) {
+  wordArr = userString.toLowerCase().split(" ")
+  let fillterdArr = wordArr.filter((word, index) => {
+    return wordArr.indexOf(word) === index;
+  });
+  return fillterdArr
+}
+
 function commonWords(text) {
   if (text.trim().length === 0) {
     return 0;
   }
-  let textArray = text.split(" ");
-  textArray.forEach(function(element) {
-    
+  let arr = uniqueWords(text)
+  let wordCountArr = [];
+  arr.forEach(function (word) {
+    let count = numberOfOccurrencesInText(word, text);
+    wordCountArr.push([word, count]);
   })
+  wordCountArr.sort(compareNumbers);
+  return wordCountArr;
+}
+
+function compareNumbers(a, b) {
+  return b[1] - a[1]
 }
 
 // UI Logic
@@ -74,6 +107,6 @@ $(document).ready(function(){
     const occurrencesOfWord = numberOfOccurrencesInText(word, passage);
   $("#total-count").html(wordCount);
   $("#selected-count").html(occurrencesOfWord);
-  $("bolded-passage").html(boldPassage(word, passage));
+  $("#bolded-passage").html(boldPassage(word, passage));
   });
 });

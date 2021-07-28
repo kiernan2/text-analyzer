@@ -95,3 +95,10 @@ const word = "hello";
 const text = "hello there";
 boldPassage(word, text);
 Expected Output: "<p><b>hello</b> there</p>"
+
+Describe: bannedWords()
+
+Test: "It should remove censored words while leaving uncensored words"
+Code:
+bannedWords("zoinks boo")
+Expected Output: Array [ "boo" ]
