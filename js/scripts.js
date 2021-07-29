@@ -23,14 +23,13 @@ function wordCounter(text) {
 function bannedWords(text) {
   const banned = ["zoinks","muppeteer","biffaroni","loopdaloop"];
   let wordArray = text.split(" ");
+  let newArray = [];
   wordArray.forEach(function(element) {
-    banned.forEach(function(ban) {
-      if (element === ban) {
-        wordArray.splice(element, 1)
+      if (!banned.includes(element)) {
+        newArray.push(element);
       }
-    });
   });
-  let fillterdArr = wordArray.filter(word => word !== "")
+  let fillterdArr = newArray.filter(word => word !== "")
   return fillterdArr.join(" ");
 }
 
@@ -54,20 +53,14 @@ function boldPassage(word, text) {
   if (noInputtedWord(word, censoredText)) {
     return "";
   }
-  let htmlString = "<p>";
   let textArray = censoredText.split(" ");
-  textArray.forEach(function(element, index) {
-    console.log(word.split(""))
+  textArray.forEach(function(element, index) { 
     if (element.toLowerCase().includes(word.toLowerCase())) {
-      htmlString = htmlString.concat("<b>" + element + "</b>");
-    } else {
-      htmlString = htmlString.concat(element);
+      textArray[index] = "<b>" + word + "</b>"
     }
-    if (index !== (textArray.length - 1)) {
-      htmlString = htmlString.concat(" ");
-    }
-  });
-  return htmlString + "</p>"
+  })
+  console.log(textArray)
+  return "<p>" + textArray.join(" ") + "</p>";
 }
 
 function uniqueWords(userString) {
