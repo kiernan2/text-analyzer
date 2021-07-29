@@ -56,7 +56,7 @@ function boldPassage(word, text) {
   let textArray = censoredText.split(" ");
   textArray.forEach(function(element, index) { 
     if (element.toLowerCase().includes(word.toLowerCase())) {
-      textArray[index] = "<b>" + word + "</b>"
+      textArray[index] = textArray[index].replace(word , ("<b>" + word + "</b>"))
     }
   })
   console.log(textArray)
